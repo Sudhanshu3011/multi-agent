@@ -1,29 +1,27 @@
+import os
 from dotenv import load_dotenv
-from functools import lru_cache
 from pydantic_settings import BaseSettings
 
 load_dotenv()
 
 
 class Settings(BaseSettings):
-    groq_api_key: str
-    groq_model: str = "llama-3.1-8b-instant"
+    GROQ_API_KEY: str = ""
+    SERPAPI_API_KEY: str = ""
 
-    serpapi_api_key: str
+    GROQ_MODEL: str = "llama-3.1-8b-instant"
 
-    log_level: str = "INFO"
+    LOG_LEVEL: str = "INFO"
 
-    langsmith_api_key: str | None = None
-    langsmith_project: str = "resume-analyser"
-    langsmith_tracing: bool = True
-    langsmith_endpoint: str = "https://api.smith.langchain.com"
+    LANGSMITH_API_KEY: str | None = None
+    LANGSMITH_PROJECT: str = "resume-analyser"
+    LANGSMITH_TRACING: bool = True
+    LANGSMITH_ENDPOINT: str = "https://api.smith.langchain.com"
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        extra = "ignore"
+    APP_DIR: str = os.path.dirname(os.path.abspath(__file__))
+    PROMPTS_DIR: str = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "prompts"
+    )
 
 
-@lru_cache
-def get_settings() -> Settings:
-    return Settings()
+settings = Settings()

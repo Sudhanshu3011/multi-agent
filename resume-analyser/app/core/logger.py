@@ -1,10 +1,10 @@
 import logging
 import sys
-from app.core.config import get_settings
+from app.core.config import settings
 
 
 def get_logger(name: str) -> logging.Logger:
-    settings = get_settings()
+
     logger = logging.getLogger(name)
 
     if not logger.handlers:
@@ -16,5 +16,5 @@ def get_logger(name: str) -> logging.Logger:
         handler.setFormatter(formatter)
         logger.addHandler(handler)
 
-    logger.setLevel(getattr(logging, settings.log_level.upper(), logging.INFO))
+    logger.setLevel(getattr(logging, settings.LOG_LEVEL.upper(), logging.INFO))
     return logger

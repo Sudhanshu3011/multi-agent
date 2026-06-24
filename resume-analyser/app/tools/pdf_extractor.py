@@ -1,7 +1,6 @@
 import io
 import pdfplumber
 from langchain_core.tools import tool
-from app.core.errors import PDFExtractionError
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
@@ -17,10 +16,8 @@ def extract_text(pdf_bytes: bytes) -> str:
                 if page_text:
                     text_parts.append(page_text.strip())
         if not text_parts:
-            raise PDFExtractionError("No extractable text found in the PDF.")
+            raise ValueError("No extractable text found in the PDF.")
         return "\n\n".join(text_parts)
-    except PDFExtractionError:
-        raise
     except Exception as exc:
-        logger.error(f"PDF extraction failed: {exc}")
-        raise PDFExtractionError(f"PDF extraction failed: {exc}") from exc
+        logger.exception("PDF extraction failed")
+        raise exc

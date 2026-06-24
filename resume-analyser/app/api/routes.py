@@ -3,7 +3,6 @@ from fastapi.responses import JSONResponse
 from typing import Optional
 
 from app.graph.builder import run_analysis
-from app.core.errors import OrchestratorError
 from app.core.logger import get_logger
 
 router = APIRouter()
@@ -52,18 +51,11 @@ async def analyse_resume(
             job_description=(job_description.strip() if job_description else None),
         )
 
-    except OrchestratorError as exc:
-        logger.error(f"Pipeline failed: {exc}")
+    except Exception as exc:
+        logger.exception("Resume analysis pipeline failed")
         raise HTTPException(
             status_code=500,
             detail=f"Analysis failed: {exc}",
-        )
-
-    except Exception as exc:
-        logger.error(f"Unexpected error: {exc}")
-        raise HTTPException(
-            status_code=500,
-            detail="An unexpected error occurred.",
         )
 
     if final_state.get("error"):
@@ -74,5 +66,5 @@ async def analyse_resume(
 
     return JSONResponse(
         status_code=200,
-        content=final_state,
+        content=final_state.get("final_response", {}),
     )

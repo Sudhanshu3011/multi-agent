@@ -1,8 +1,10 @@
 import json
 
 from app.agents.base_agent import BaseAgent
-from app.core.errors import FeedbackAgentError
+from app.core.logger import get_logger
 from app.graph.state import ResumeState
+
+logger = get_logger(__name__)
 
 
 class FeedbackAgent(BaseAgent):
@@ -12,11 +14,15 @@ class FeedbackAgent(BaseAgent):
 
     prompt_file = "feedback_agent.yaml"
 
+    def __init__(self) -> None:
+        super().__init__()
+        self._prompt = self._load_prompt()
+
     def run(self, state: ResumeState) -> dict:
-        self.logger.info("FeedbackAgent started")
+        logger.info("FeedbackAgent started")
 
         if state.get("error"):
-            self.logger.warning("Skipping — upstream error detected")
+            logger.warning("Skipping — upstream error detected")
             return {}
 
         parsed_sections = state.get("parsed_sections") or {}
@@ -44,9 +50,9 @@ class FeedbackAgent(BaseAgent):
             feedback = result.get("feedback", [])
 
         except Exception as exc:
-            self.logger.error(f"Feedback generation failed: {exc}")
-            raise FeedbackAgentError(str(exc)) from exc
+            logger.exception("Feedback generation failed")
+            raise exc
 
-        self.logger.info(f"Generated {len(feedback)} feedback points")
+        logger.info(f"Generated {len(feedback)} feedback points")
 
         return {"feedback": feedback}

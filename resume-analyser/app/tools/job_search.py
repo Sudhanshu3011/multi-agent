@@ -3,26 +3,24 @@ from typing import List, Dict
 
 import requests
 from langchain_core.tools import tool
-from app.core.config import get_settings
+from app.core.config import settings
 
 
 @tool
 def search_google_jobs(
     query: str,
     location: str = "India",
-    limit: int = 10,
+    limit: int = 3,
 ) -> List[Dict]:
     """
     Search Google Jobs using SerpApi and return a list of jobs.
     """
 
-    settings = get_settings()
-
     params = {
         "engine": "google_jobs",
         "q": query,
         "location": location,
-        "api_key": settings.serpapi_api_key,
+        "api_key": settings.SERPAPI_API_KEY,
     }
 
     response = requests.get(
@@ -42,15 +40,8 @@ def search_google_jobs(
                 "title": job.get("title"),
                 "company": job.get("company_name"),
                 "location": job.get("location"),
-                "description": job.get("description"),
                 "via": job.get("via"),
                 "posted_at": job.get("detected_extensions", {}).get("posted_at"),
-                "thumbnail": job.get("thumbnail"),
-                "apply_links": [
-                    link.get("link")
-                    for link in job.get("related_links", [])
-                    if link.get("link")
-                ],
             }
         )
 
