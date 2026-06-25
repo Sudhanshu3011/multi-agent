@@ -9,8 +9,8 @@ app = FastAPI(
     title="Resume Analyser API",
     description=(
         "Multi-agent resume analysis pipeline powered by LangGraph + Groq. "
-        "Upload a PDF resume (and optionally a job description) to receive "
-        "structured parsing, skills analysis, section scores, and actionable feedback."
+        "Upload a PDF resume and the detailed job description for which you are applying to receive "
+        "structured parsing, skills analysis, section scores, actionable feedback and recommended jobs."
     ),
     version="1.0.0",
     docs_url="/docs",

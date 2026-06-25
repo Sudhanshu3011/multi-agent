@@ -45,10 +45,6 @@ The orchestrator utilizes **LangGraph** to manage states and route steps. Some s
 
 Make sure your virtual environment is active, then install dependencies:
 
-```bash
-cd resume-analyser
-pip install -r requirements.txt
-```
 
 ### 2. Configure environment
 
@@ -115,7 +111,7 @@ curl -X POST http://localhost:8000/api/v1/analyse \
     "domains": ["backend engineering", "cloud computing"]
   },
   "scores": {
-    "llm_score": 85,
+    "llm_score": 8,
     "missing_skills": ["postgresql"],
     "explanation": "Candidate matches Python, FastAPI, and Docker. Missing PostgreSQL."
   },

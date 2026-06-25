@@ -20,7 +20,14 @@ async def health_check():
 @router.post("/analyse", summary="Analyse a resume PDF")
 async def analyse_resume(
     resume: UploadFile = File(..., description="PDF resume file"),
-    job_description: str = Form(..., description="job description text"),
+    job_description: str = Form(
+        ...,
+        description=(
+            "Paste the full job description here. "
+            "Include important keywords such as required skills, experience, and technologies. "
+            "The more detailed it is, the better the resume analysis results will be."
+        ),
+    ),
 ) -> JSONResponse:
     """
     Upload a PDF resume and return final aggregated result from the graph.
