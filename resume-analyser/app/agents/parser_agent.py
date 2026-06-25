@@ -7,7 +7,7 @@ logger = get_logger(__name__)
 
 class ParserAgent(BaseAgent):
     """
-    Node 1: Asks the LLM to segment the extracted resume text into structured sections (experience, education, skills, etc.).
+    Asks the LLM to segment the extracted resume text into structured sections (experience, education, skills, etc.).
     """
 
     prompt_file = "parser_agent.yaml"

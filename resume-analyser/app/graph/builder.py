@@ -6,7 +6,6 @@ from app.agents.scoring_agent import ScoringAgent
 from app.agents.feedback_agent import FeedbackAgent
 from app.agents.job_fetcher_agent import JobFetcherAgent
 from app.core.logger import get_logger
-from app.tools.pdf_extractor import extract_text
 
 logger = get_logger(__name__)
 
@@ -88,16 +87,13 @@ def build_graph():
 compiled_graph = build_graph()
 
 
-def run_analysis(pdf_bytes: bytes, job_description: str | None = None) -> dict:
+def run_analysis(
+    extracted_text: str,
+    job_description: str | None = None,
+) -> dict:
     """
-    Entry point called by the API route.
-    Returns the final ResumeState as a dict.
+    Run the resume analysis graph on already extracted text.
     """
-    try:
-        extracted_text = extract_text(pdf_bytes)
-    except Exception as exc:
-        logger.exception("PDF extraction failed")
-        raise exc
 
     initial_state: ResumeState = {
         "extracted_text": extracted_text,
@@ -115,9 +111,13 @@ def run_analysis(pdf_bytes: bytes, job_description: str | None = None) -> dict:
 
     try:
         logger.info("Starting resume analysis pipeline")
+
         final_state = compiled_graph.invoke(initial_state)
+
         logger.info("Pipeline completed successfully")
+
         return final_state
-    except Exception as exc:
+
+    except Exception:
         logger.exception("Orchestration failed")
-        raise exc
+        raise
