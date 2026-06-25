@@ -1,13 +1,12 @@
 import io
 import pdfplumber
-from langchain_core.tools import tool
 from app.core.logger import get_logger
 
 logger = get_logger(__name__)
 
 
 def extract_text(pdf_bytes: bytes) -> str:
-    """Direct (non-tool) call for use inside agents."""
+    """Direct call for use inside agents."""
     try:
         text_parts = []
         with pdfplumber.open(io.BytesIO(pdf_bytes)) as pdf:

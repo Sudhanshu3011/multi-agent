@@ -20,9 +20,7 @@ async def health_check():
 @router.post("/analyse", summary="Analyse a resume PDF")
 async def analyse_resume(
     resume: UploadFile = File(..., description="PDF resume file"),
-    job_description: Optional[str] = Form(
-        None, description="Optional job description text"
-    ),
+    job_description: str = Form(..., description="job description text"),
 ) -> JSONResponse:
     """
     Upload a PDF resume and return final aggregated result from the graph.
@@ -48,7 +46,7 @@ async def analyse_resume(
     try:
         final_state = run_analysis(
             pdf_bytes=pdf_bytes,
-            job_description=(job_description.strip() if job_description else None),
+            job_description=(job_description.strip()),
         )
 
     except Exception as exc:
